@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Infografía Benchmarking | Descargable PDF</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Librerías para PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #dce4f0 0%, #b8c9e0 100%);
+            font-family: 'Inter', sans-serif;
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+        }
+
+        /* Contenedor principal (lo que se convertirá en PDF) */
+        .infografia-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 48px;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        /* Encabezado con gradiente */
+        .hero {
+            background: linear-gradient(135deg, #0B2F5F, #1C6E8F);
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .hero h1 i {
+            background: #FFB347;
+            padding: 12px;
+            border-radius: 60px;
+            color: #0B2F5F;
+            font-size: 1.8rem;
+        }
+
+        .subtitulo {
+            background: rgba(255,255,240,0.15);
+            display: inline-block;
+            padding: 0.3rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        /* Contenido interno */
+        .contenido {
+            padding: 2rem;
+        }
+
+        /* Grid responsivo */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: #f9faff;
+            border-radius: 28px;
+            padding: 1.4rem;
+            transition: all 0.25s ease;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2edf2;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 28px -12px rgba(0, 0, 0, 0.2);
+        }
+
+        .card i {
+            font-size: 2rem;
+            background: #E3F0F5;
+            padding: 10px;
+            border-radius: 20px;
+            color: #1C6E8F;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .badge-tipo {
+            background: #eef2fc;
+            border-radius: 30px;
+            padding: 5px 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1C6E8F;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        /* Imagen central */
+        .imagen-destacada {
+            background: #F4F9FE;
+            border-radius: 32px;
+            padding: 1.2rem;
+            text-align: center;
+            margin-bottom: 1.8rem;
+            border: 1px solid #cde3ef;
+        }
+
+        .imagen-destacada img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 24px;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+        }
+
+        .tabla-pasos {
+            background: white;
+            border-radius: 28px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid #d9e6f2;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        th {
+            background: #0B2F5F;
+            color: white;
+            padding: 12px;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #e0ecf5;
+        }
+
+        .advertencia {
+            background: #FFF3E0;
+            border-left: 7px solid #E67E22;
+            padding: 1.2rem;
+            border-radius: 24px;
+            margin: 1.5rem 0;
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .lista-mejora {
+            background: #eef2fa;
+            border-radius: 24px;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .footer-infografia {
+            background: #F0F4FA;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            font-size: 0.7rem;
+            border-top: 1px solid #cbdde9;
+        }
+
+        .botones-accion {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-pdf {
+            background: #e63946;
+            color: white;
+        }
+
+        .btn-copiar {
+            background: #2c7da0;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: scale(0.97);
+            opacity: 0.9;
+        }
+
+        @media (max-width: 680px) {
+            .contenido {
+                padding: 1.2rem;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div style="max-width: 1150px; margin: 0 auto;">
+    <div class="botones-accion">
+        <button class="btn btn-pdf" id="descargarPDFBtn"><i class="fas fa-file-pdf"></i> Descargar como PDF</button>
+        <button class="btn btn-copiar" id="copiarForoBtn"><i class="fas fa-copy"></i> Copiar texto para foro</button>
+    </div>
+
+    <!-- ESTA ES LA INFOGRAFÍA QUE SE CONVERTIRÁ A PDF -->
+    <div id="infografiaParaPDF" class="infografia-container">
+        <div class="hero">
+            <h1><i class="fas fa-chart-line"></i> BENCHMARKING: ESTRATEGIA DE MEJORA Y CRECIMIENTO</h1>
+            <div class="subtitulo">✦ APRENDER DE LOS MEJORES PARA SER MEJOR ✦</div>
+        </div>
+
+        <div class="contenido">
+            <!-- 1. QUÉ ES y 2. TIPOS -->
+            <div class="grid-3">
+                <div class="card">
+                    <i class="fas fa-question-circle"></i>
+                    <h3>1. ¿QUÉ ES?</h3>
+                    <p>Es un proceso de <strong>comparación continua</strong> que evalúa productos, servicios y procesos de trabajo de las organizaciones más destacadas para adaptar mejores prácticas.</p>
+                    <span class="badge-tipo"><i class="fas-regular fa-lightbulb"></i> No es copiar, es aprender</span>
+                </div>
+                <div class="card">
+                    <i class="fas fa-tags"></i>
+                    <h3>2. TIPOS</h3>
+                    <p><strong>⚔️ Competitivo:</strong> vs rivales directos.<br>
+                    <strong>🏭 Interno:</strong> entre áreas de la misma empresa.<br>
+                    <strong>📊 Funcional:</strong> con empresas de otra industria.</p>
+                    <span class="badge-tipo"><i class="fas fa-chart-simple"></i> Adaptable a cada objetivo</span>
+                </div>
+                <div class="card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>BENEFICIOS CLAVE</h3>
+                    <p>✅ Identifica brechas de rendimiento.<br>✅ Acelera innovación.<br>✅ Reduce costos y mejora calidad.<br>✅ Aporta visión objetiva del mercado.</p>
+                </div>
+            </div>
+
+            <!-- IMAGEN QUE SUBISTE (se incluye como elemento visual) -->
+            <div class="imagen-destacada">
+                <img src="Gemini_Generated_Image_a8ewi0a8ewi0a8ew.png" alt="Benchmarking infografía visual" onerror="this.src='https://placehold.co/800x300?text=Benchmarking+Visual'">
+                <p style="margin-top: 10px; font-size: 0.8rem; color: #2c5a6e;"><i class="fas fa-image"></i> Esquema visual del proceso de Benchmarking</p>
+            </div>
+
+            <!-- 3. EJEMPLO MERCADO LIBRE EN TABLA -->
+            <h3 style="margin-top: 0.5rem;">📌 3. EJEMPLO: MERCADO LIBRE</h3>
+            <div class="tabla-pasos">
+                <table>
+                    <thead><tr><th>Paso</th><th>Acción</th></tr></thead>
+                    <tbody>
+                        <tr><td>1. Problema</td><td>Entregas lentas (7-10 días en zonas alejadas)</td></tr>
+                        <tr><td>2. Benchmarking con</td><td>Amazon (centros descentralizados + IA) y Rappi (dark stores)</td></tr>
+                        <tr><td>3. Adaptación</td><td>Lanzó <strong>Mercado Envíos Flex</strong>: centros urbanos pequeños + red de entregadores</td></tr>
+                        <tr><td>4. Resultado</td><td>✅ Entregas 24-48 hrs y reducción de costos ~15%</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 4. ADVERTENCIA IMPORTANTE + LISTA -->
+            <div class="advertencia">
+                <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color:#E67E22;"></i>
+                <div><strong>⚠️ ADVERTENCIA IMPORTANTE (Ernst & Young / American Quality Foundation)</strong><br>
+                El benchmarking es <strong>efectivo para empresas líderes</strong> (nacionales o mundiales), pero <strong>ineficaz para empresas débiles</strong>.</div>
+            </div>
+
+            <div class="lista-mejora">
+                <p><strong>📋 CONCLUSIÓN PRÁCTICA:</strong> “No persigas al líder si aún no has resuelto tus problemas internos”</p>
+                <p><strong>Primeros pasos para empresas débiles antes de benchmarking:</strong></p>
+                <ul style="margin-left: 1.5rem; margin-top: 8px;">
+                    <li>🔻 Reducir costos operativos</li>
+                    <li>📈 Aumentar ventas</li>
+                    <li>🌍 Ganar nuevos mercados</li>
+                    <li>⚙️ Mejorar eficiencia y productividad</li>
+                </ul>
+            </div>
+
+            <!-- 5. CONCLUSIÓN FINAL -->
+            <div style="background: #E3F0F5; border-radius: 28px; padding: 1.2rem; margin-top: 1rem; text-align: center;">
+                <i class="fas fa-chalkboard-user" style="font-size: 1.8rem; color:#0B2F5F;"></i>
+                <p style="font-weight: 700; margin-top: 8px;">5. CONCLUSIÓN FINAL</p>
+                <p>Permite cerrar brechas, acelerar mejoras y superar a los líderes... pero solo si tu empresa ya tiene una base sólida de eficiencia.</p>
+            </div>
+        </div>
+
+        <div class="footer-infografia">
+            <span><i class="fas fa-book-open"></i> REFERENCIA APA: Andreevich, B. A. (2020). <em>Benchmarking as a Foundation of the Future Economy</em> (pp. 25-26). Cambridge Scholars Publishing.</span>
+            <span><i class="fas fa-link"></i> https://elibro-net.bibliotecavirtual.unad.edu.co/es/reader/unadenglish/156589?page=25</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Botón copiar para foro (texto enriquecido)
+    const copiarBtn = document.getElementById('copiarForoBtn');
+    const textoForo = `📌 **APORTE FORO: Benchmarking como ventaja competitiva** 📌
+
+Después de analizar el enfoque moderno de Benchmarking y la lectura de Andreevich (2020), comparto mi análisis:
+
+🔹 ¿Qué es? Proceso continuo de comparación con líderes para adaptar mejores prácticas.
+🔹 Tipos: Competitivo, Interno y Funcional.
+🔹 Ejemplo real: Mercado Libre mejoró su logística al benchmarkear con Amazon y Rappi, logrando entregas en 24-48h.
+🔹 Advertencia clave: El benchmarking es efectivo solo para empresas líderes; las débiles deben primero sanear costos, ventas y productividad.
+🔹 Conclusión: No se trata de copiar, sino de aprender estratégicamente cuando la empresa tiene bases sólidas.
+
+📚 Referencia: Andreevich, B. A. (2020). Benchmarking as a Foundation of the Future Economy (pp. 25-26). Cambridge Scholars Publishing.
+
+¡Aporto esta infografía interactiva para el debate!`;
+
+    copiarBtn.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(textoForo);
+            alert('✅ Texto copiado al portapapeles. ¡Pégalo en el foro!');
+        } catch (err) {
+            alert('Copia manual el texto seleccionándolo.');
+        }
+    });
+
+    // Descargar como PDF (html2canvas + jspdf)
+    const downloadBtn = document.getElementById('descargarPDFBtn');
+    downloadBtn.addEventListener('click', async () => {
+        const element = document.getElementById('infografiaParaPDF');
+        if (!element) return;
+
+        // Mostrar un pequeño loading
+        const originalBtnText = downloadBtn.innerHTML;
+        downloadBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Generando PDF...';
+        downloadBtn.disabled = true;
+
+        try {
+            const canvas = await html2canvas(element, {
+                scale: 2,          // mejor calidad
+                backgroundColor: '#ffffff',
+                logging: false,
+                useCORS: true      // permite imágenes externas (si aplica)
+            });
+            const imgData = canvas.toDataURL('image/png');
+            const { jsPDF } = window.jspdf;
+            // Orientación horizontal o vertical? Depende del ancho. Usamos vertical con buena escala.
+            const imgWidth = 210; // mm (A4 ancho)
+            const pageHeight = 297;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            let pdf = new jsPDF('p', 'mm', 'a4');
+            let position = 0;
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            if (imgHeight > pageHeight) {
+                // si es más alto, agregar otra página (raro en infografías)
+                let remaining = imgHeight - pageHeight;
+                while (remaining > 0) {
+                    position = position - pageHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    remaining -= pageHeight;
+                }
+            }
+            pdf.save('infografia_benchmarking.pdf');
+        } catch (error) {
+            console.error('Error al generar PDF', error);
+            alert('Hubo un error al generar el PDF. Intenta nuevamente.');
+        } finally {
+            downloadBtn.innerHTML = originalBtnText;
+            downloadBtn.disabled = false;
+        }
+    });
+</script>
+</body>
+</html>
